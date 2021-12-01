@@ -13,9 +13,9 @@ public static class ScriptModels
         public float ViewXSensitivity;
         public float ViewYSensitivity;
         public float viewClampYMin = -70;
-        public float viewClampYMax = 70;
-
-        [Header("Movement Settings")]
+        public float viewClampYMax = 60;
+        
+        [Header("Movement -Walking")]
         public float MoveForwardSpeed;
         public float MoveBackSpeed;
         public float MoveStrafeSpeed;
