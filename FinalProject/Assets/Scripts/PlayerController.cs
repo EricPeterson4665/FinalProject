@@ -51,7 +51,6 @@ public class PlayerController : MonoBehaviour
     private bool isFiring;
     public GameObject flash;
     public Camera aimCam;
-    public float distanceToTarget;
 
     private void Awake()
     {
@@ -221,8 +220,10 @@ public class PlayerController : MonoBehaviour
         RaycastHit hit;
         if (Physics.Raycast(aimCam.transform.position, aimCam.transform.TransformDirection(Vector3.forward), out hit))
         {
-            distanceToTarget = hit.distance;
-            print("Hit Object: " + hit.transform.gameObject.name);
+            if (hit.transform.gameObject.tag == "Target")
+            {
+                hit.transform.gameObject.SendMessage("TargetHit");
+            }
         }
         weapon.GetComponent<Animator>().Play("FirePistol");
         weapon.GetComponent<AudioSource>().Play();
