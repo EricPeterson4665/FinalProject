@@ -45,7 +45,14 @@ public class PlayerController : MonoBehaviour
     private float stanceCapsuleHeightVelocity;
 
     private bool isSprinting;
-    
+
+    [Header("Weapon")]
+    public GameObject weapon;
+    private bool isFiring;
+    public GameObject flash;
+    public Camera aimCam;
+    public float distanceToTarget;
+
     private void Awake()
     {
         defaultInput = new DefaultInput();
@@ -55,6 +62,8 @@ public class PlayerController : MonoBehaviour
         defaultInput.Player.Jump.performed += e => Jump();
         defaultInput.Player.Crouch.performed += e => Crouch();
         defaultInput.Player.Sprint.performed += e => Sprint();
+        defaultInput.Player.SprintReleased.performed += e => StopSprint();
+        defaultInput.Player.Fire.performed += e => Fire();
         defaultInput.Player.Exit.performed += e => escExit();
         defaultInput.Enable();
 
@@ -87,7 +96,7 @@ public class PlayerController : MonoBehaviour
 
     private void CalculateMovement()
     {
-        if(inputMovement.y <= 0.2f)
+        if(inputMovement.y <= 0.1f)
         {
             isSprinting = false;
         }
@@ -184,13 +193,45 @@ public class PlayerController : MonoBehaviour
 
     private void Sprint()
     {
-        if (inputMovement.y <= 0.2f)
+        if (inputMovement.y <= 0.1f)
         {
             isSprinting = false;
             return;
         }
 
         isSprinting = !isSprinting;
+    }
+
+    private void StopSprint()
+    {
+        isSprinting = false;
+    }
+
+    private void Fire()
+    {
+        if(isFiring == false)
+        {
+            StartCoroutine(FireAnimation());            
+        }
+    }
+
+    IEnumerator FireAnimation()
+    {
+        isFiring = true;
+        RaycastHit hit;
+        if (Physics.Raycast(aimCam.transform.position, aimCam.transform.TransformDirection(Vector3.forward), out hit))
+        {
+            distanceToTarget = hit.distance;
+            print("Hit Object: " + hit.transform.gameObject.name);
+        }
+        weapon.GetComponent<Animator>().Play("FirePistol");
+        weapon.GetComponent<AudioSource>().Play();
+        flash.SetActive(true);
+        yield return new WaitForSeconds(0.04f);
+        flash.SetActive(false);
+        yield return new WaitForSeconds(0.21f);
+        weapon.GetComponent<Animator>().Play("New State");
+        isFiring = false;
     }
 
     private void escExit()
