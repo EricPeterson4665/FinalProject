@@ -27,6 +27,14 @@ public class Target : MonoBehaviour
                 gameState.target6Hit = true; break;
             case "Target7":
                 gameState.target7Hit = true; break;
+            case "Target8":
+                gameState.target8Hit = true; break;
+            case "Target9":
+                gameState.target9Hit = true; break;
+            case "Target10":
+                gameState.target10Hit = true; break;
+            case "Target11":
+                gameState.target11Hit = true; break;
 
         }
 
